@@ -9,6 +9,7 @@
     "nodejs"
   ],
   "dependencies": {
-    "puppeteer": "^19.3.0"
+    "puppeteer": "^19.3.0",
+    "query-string": "^7.1.3"
   }
 }

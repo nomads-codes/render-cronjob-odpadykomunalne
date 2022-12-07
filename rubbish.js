@@ -1,13 +1,16 @@
 const puppeteer = require("puppeteer");
+const queryString = require("query-string");
 
 (async () => {
-  const browser = await puppeteer.launch({ headless: true });
+  const queryParsed = queryString.parse(process.argv.slice(2).join("&"));
+  let query = queryString.stringify(queryParsed);
 
+  const browser = await puppeteer.launch({ headless: true });
   const base_url = "https://odpadykomunalne.tczew.pl/?p=1-harmonogram";
 
   const urls = {
-    selective: `${base_url}&t=2&s=b3f753&d=8`,
-    mixed: `${base_url}&t=1&s=b3f753&d=8`,
+    selective: `${base_url}&t=2&${query ? query : "&s=b3f753&d=14"}`,
+    mixed: `${base_url}&t=1&${query ? query : "&s=b3f753&d=14"}`,
   };
 
   const getRubbishData = async (url, type) => {
