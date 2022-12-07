@@ -1,16 +1,21 @@
 const puppeteer = require("puppeteer");
 const queryString = require("query-string");
+const fs = require("fs");
 
 (async () => {
-  const queryParsed = queryString.parse(process.argv.slice(2).join("&"));
+  let queryParsed = queryString.parse(process.argv.slice(2).join("&"));
   let query = queryString.stringify(queryParsed);
 
   const browser = await puppeteer.launch({ headless: true });
   const base_url = "https://odpadykomunalne.tczew.pl/?p=1-harmonogram";
 
+  if (query.length <= 0) {
+    query = "&s=b3f753&d=14";
+  }
+
   const urls = {
-    selective: `${base_url}&t=2&${query ? query : "&s=b3f753&d=14"}`,
-    mixed: `${base_url}&t=1&${query ? query : "&s=b3f753&d=14"}`,
+    selective: `${base_url}&t=2&${query}`,
+    mixed: `${base_url}&t=1&${query}`,
   };
 
   const getRubbishData = async (url, type) => {
@@ -120,7 +125,15 @@ const queryString = require("query-string");
     mixed: await getRubbishData(urls.mixed, "mixed"),
   };
 
-  console.log([...rubbish.selective, ...rubbish.mixed]);
+  const rubbishData = {
+    details: {
+      urls,
+    },
+    data: [...rubbish.selective, ...rubbish.mixed],
+  };
+  const json = JSON.stringify(rubbishData, null, 2);
+
+  fs.writeFileSync(`./data/rubbish.json`, json);
 
   await browser.close();
 })();
