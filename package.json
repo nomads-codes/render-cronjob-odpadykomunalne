@@ -4,7 +4,7 @@
   "description": "nodejs image demo",
   "author": "Mateusz Flisikowski Development <contact@mflisikowski.dev>",
   "license": "MIT",
-  "main": "app.js",
+  "main": "rubbish.js",
   "keywords": [
     "nodejs"
   ],
