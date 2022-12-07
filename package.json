@@ -1,11 +1,14 @@
 {
-   "name":"render-cronjob-odpadykomunalne",
-   "version":"1.0.0",
-   "description":"nodejs image demo",
-   "author":"Mateusz Flisikowski Development <contact@mflisikowski.dev>",
-   "license":"MIT",
-   "main":"app.js",
-   "keywords":[
-      "nodejs"
-   ]
+  "name": "render-cronjob-odpadykomunalne",
+  "version": "1.0.0",
+  "description": "nodejs image demo",
+  "author": "Mateusz Flisikowski Development <contact@mflisikowski.dev>",
+  "license": "MIT",
+  "main": "app.js",
+  "keywords": [
+    "nodejs"
+  ],
+  "dependencies": {
+    "puppeteer": "^19.3.0"
+  }
 }
