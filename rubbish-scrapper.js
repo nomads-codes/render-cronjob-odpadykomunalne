@@ -1,8 +1,8 @@
-const puppeteer = require("puppeteer");
-const queryString = require("query-string");
-const fs = require("fs");
+import queryString from "query-string";
+import puppeteer from "puppeteer";
+import fs from "fs";
 
-(async () => {
+export const rubbishScrapper = async (updated_at) => {
   let queryParsed = queryString.parse(process.argv.slice(2).join("&"));
   let query = queryString.stringify(queryParsed);
 
@@ -30,7 +30,7 @@ const fs = require("fs");
     await page.waitForSelector(resultsSelector);
 
     // Extract the results from the page.
-    const rubbishData = await page.evaluate((resultsSelector) => {
+    const rubbishData = await page.evaluate(async (resultsSelector) => {
       const contentNodeHeadingData = (heading) => {
         heading = heading?.textContent?.trim();
 
@@ -49,7 +49,7 @@ const fs = require("fs");
         const [date, day] = heading.split(" ");
 
         return {
-          date,
+          date: date,
           day,
         };
       };
@@ -86,12 +86,18 @@ const fs = require("fs");
         const [streetPrefix, streetName, ...rest] = content;
 
         const street = [streetPrefix, streetName].join(" ") || "";
-        const rubbish = rest.length ? rest : [""];
+        const rubbish = rest.length ? rest : null;
 
-        return {
-          rubbish,
-          street,
-        };
+        if (rubbish === null) {
+          return {
+            street,
+          };
+        } else {
+          return {
+            rubbish,
+            street,
+          };
+        }
       };
 
       return [...document.querySelectorAll(resultsSelector)].map(
@@ -126,14 +132,13 @@ const fs = require("fs");
   };
 
   const rubbishData = {
-    details: {
-      urls,
-    },
-    data: [...rubbish.selective, ...rubbish.mixed],
+    updated_at: updated_at,
+    urls,
+    rubbish: [...rubbish.selective, ...rubbish.mixed],
   };
   const json = JSON.stringify(rubbishData, null, 2);
 
-  fs.writeFileSync(`./data/rubbish.json`, json);
+  fs.writeFileSync(`./data/rubbish-data.json`, json);
 
   await browser.close();
-})();
+};

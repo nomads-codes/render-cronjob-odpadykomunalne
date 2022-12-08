@@ -1,21 +1,10 @@
 {
-  "details": {
-    "urls": {
-      "selective": "https://odpadykomunalne.tczew.pl/?p=1-harmonogram&t=2&&s=b3f753&d=14",
-      "mixed": "https://odpadykomunalne.tczew.pl/?p=1-harmonogram&t=1&&s=b3f753&d=14"
-    }
+  "updated_at": "czwartek, 8 grudnia 2022, 14:04",
+  "urls": {
+    "selective": "https://odpadykomunalne.tczew.pl/?p=1-harmonogram&t=2&&s=b3f753&d=14",
+    "mixed": "https://odpadykomunalne.tczew.pl/?p=1-harmonogram&t=1&&s=b3f753&d=14"
   },
-  "data": [
-    {
-      "type": "selective",
-      "rubbish": [
-        "METALE",
-        "GABARYTY"
-      ],
-      "street": "ul. Klima",
-      "date": "07.12.2022",
-      "day": "Środa"
-    },
+  "rubbish": [
     {
       "type": "selective",
       "rubbish": [
@@ -37,46 +26,41 @@
       "day": "Wtorek"
     },
     {
-      "type": "mixed",
+      "type": "selective",
       "rubbish": [
-        ""
+        "METALE",
+        "GABARYTY"
       ],
+      "street": "ul. Klima",
+      "date": "21.12.2022",
+      "day": "Środa"
+    },
+    {
+      "type": "mixed",
       "street": "Klima ",
       "date": "08.12.2022",
       "day": "Czwartek"
     },
     {
       "type": "mixed",
-      "rubbish": [
-        ""
-      ],
       "street": "Klima ",
       "date": "15.12.2022",
       "day": "Czwartek"
     },
     {
       "type": "mixed",
-      "rubbish": [
-        ""
-      ],
       "street": "Klima ",
       "date": "22.12.2022",
       "day": "Czwartek"
     },
     {
       "type": "mixed",
-      "rubbish": [
-        ""
-      ],
       "street": "Klima ",
       "date": "29.12.2022",
       "day": "Czwartek"
     },
     {
       "type": "mixed",
-      "rubbish": [
-        ""
-      ],
       "street": "Klima ",
       "date": "05.01.2023",
       "day": "Czwartek"

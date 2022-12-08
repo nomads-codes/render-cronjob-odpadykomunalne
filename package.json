@@ -4,11 +4,19 @@
   "description": "nodejs image demo",
   "author": "Mateusz Flisikowski Development <contact@mflisikowski.dev>",
   "license": "MIT",
-  "main": "rubbish.js",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "cleanup-data": "rm -rf ./data/*",
+    "cleanup-logs": "rm -rf ./logs/*",
+    "cleanup": "yarn cleanup-data && yarn cleanup-logs",
+    "start": "yarn cleanup && node --experimental-modules --es-module-specifier-resolution=node index.js"
+  },
   "keywords": [
     "nodejs"
   ],
   "dependencies": {
+    "node-schedule": "^2.1.0",
     "puppeteer": "^19.3.0",
     "query-string": "^7.1.3"
   }
