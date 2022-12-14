@@ -7,16 +7,17 @@
   "type": "module",
   "main": "index.js",
   "scripts": {
-    "cleanup-data": "rm -rf ./data/*",
-    "cleanup-logs": "rm -rf ./logs/*",
-    "cleanup": "yarn cleanup-data && yarn cleanup-logs",
-    "start": "yarn cleanup && node --experimental-modules --es-module-specifier-resolution=node index.js"
+    "cleanup": "rm -rf ./data/*.json && rm -rf ./data/*.log",
+    "start": "yarn cleanup && node --experimental-modules --es-module-specifier-resolution=node index.js",
+    "dev": "yarn cleanup && nodemon --experimental-modules --es-module-specifier-resolution=node index.js"
   },
   "keywords": [
     "nodejs"
   ],
   "dependencies": {
+    "cron-validate": "^1.4.5",
     "node-schedule": "^2.1.0",
+    "nodemon": "^2.0.20",
     "puppeteer": "^19.3.0",
     "query-string": "^7.1.3"
   }
