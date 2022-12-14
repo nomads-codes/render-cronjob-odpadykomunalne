@@ -20,10 +20,11 @@ export const schedule = () => {
     }
 
     if (cronExpression.isValid()) {
-      scheduleJob(ruleExpression, async (date) => {
-        const scheduleData = await rubbishScrapper(date);
+      scheduleJob(ruleExpression, async (dateString) => {
+        const scheduleData = await rubbishScrapper(dateString);
+        const { date } = getDate(dateString);
         const scheduleLog = getJSONFormat({
-          updated_at: getDate(date, "human"),
+          updated_at: date.human,
           expresion: ruleExpression,
           name: ruleName,
         });
@@ -34,10 +35,14 @@ export const schedule = () => {
     }
 
     if (!cronExpression.isValid()) {
+      const { getError, isError } = cronExpression;
+      const isoDate = new Date().toISOString();
+      const { date } = getDate(isoDate);
+
       const scheduleError = getJSONFormat({
-        isError: cronExpression.isError(),
-        message: cronExpression.getError(),
-        date: getDate(new Date().toISOString(), "human"),
+        message: getError(),
+        error: isError(),
+        date: date.human,
       });
 
       writeCSVFile(filePaths.schedule.error, getCSVFormat(scheduleError));

@@ -16,7 +16,19 @@ export const filePaths = {
   },
 };
 
+export const dateLocale = "pl-PL";
+export const dateOptions = {
+  weekday: "long",
+  month: "numeric",
+  day: "numeric",
+  year: "numeric",
+  hour: "numeric",
+  minute: "numeric",
+};
+
 export default {
+  dateOptions,
+  dateLocale,
   filePaths,
   cronRules,
 };

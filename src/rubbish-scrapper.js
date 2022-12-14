@@ -127,23 +127,22 @@ export const rubbishScrapper = async (updated_at) => {
 
   const data = [...selective, ...mixed]
     .map((data) => {
-      if (typeof data.date === "string") {
-        const date = getDate(data.date, "iso");
-        return {
-          ...data,
-          date,
-        };
-      }
+      const { date } = getDate(data.date);
 
-      return data;
+      return {
+        ...data,
+        date: date.iso,
+      };
     })
     .sort((a, b) => new Date(a.date) - new Date(b.date));
 
   await browser.close();
 
+  const { date } = getDate(updated_at);
+
   return {
     details: {
-      updated_at: getDate(updated_at, "iso"),
+      updated_at: date.iso,
       urls,
     },
     data,

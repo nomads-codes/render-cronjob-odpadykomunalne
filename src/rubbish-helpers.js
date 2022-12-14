@@ -1,33 +1,28 @@
 import { promises, existsSync } from "fs";
+import { dateOptions, dateLocale } from "./config";
 
-export const getDate = (date, style = "iso") => {
-  if (typeof date === "string") {
-    const [day, month, year] = date.replace(/[^\d]/g, "-").split("-");
-    date = `${year}-${month}-${day}`;
+export const splitDateIntoParts = (date) => {
+  return date.replace(/[^\d]/g, "-").split("-");
+};
+
+export const getDate = (
+  dateString,
+  options = dateOptions,
+  locale = dateLocale
+) => {
+  if (typeof dateString === "string") {
+    const [day, month, year] = splitDateIntoParts(dateString);
+    dateString = `${year}-${month}-${day}`;
   }
 
-  date = new Date(date);
+  const date = new Date(dateString);
 
-  const humanOptions = {
-    weekday: "long",
-    month: "numeric",
-    day: "numeric",
-    year: "numeric",
-    hour: "numeric",
-    minute: "numeric",
+  return {
+    date: {
+      human: date.toLocaleDateString(locale, options),
+      iso: date.toISOString(),
+    },
   };
-
-  const dateFormat = {
-    human: (date) => date.toLocaleDateString("pl-PL", humanOptions),
-    iso: (date) => date.toISOString(),
-  };
-
-  const styles = {
-    human: dateFormat.human(date),
-    iso: dateFormat.iso(date),
-  };
-
-  return styles[style];
 };
 
 export const getJSONFormat = (data, space = undefined, replacer = null) =>
