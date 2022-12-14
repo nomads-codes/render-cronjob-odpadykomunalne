@@ -11,16 +11,21 @@ import {
 } from "./rubbish-helpers";
 
 export const schedule = () => {
-  for (const [name, expression] of Object.entries(cronRules)) {
-    const cronExpression = cron(expression);
+  for (const [ruleName, ruleExpression] of Object.entries(cronRules)) {
+    const isProductionEnvironment = process.env.NODE_ENV === "production";
+    const cronExpression = cron(ruleExpression);
+
+    if (isProductionEnvironment && ruleName === "dev") {
+      return;
+    }
 
     if (cronExpression.isValid()) {
-      scheduleJob(expression, async (date) => {
+      scheduleJob(ruleExpression, async (date) => {
         const scheduleData = await rubbishScrapper(date);
         const scheduleLog = getJSONFormat({
           updated_at: getDate(date, "human"),
-          expression,
-          name,
+          ruleExpression,
+          ruleName,
         });
 
         writeFileSync(`./data/schedule.json`, getJSONFormat(scheduleData, 2));
