@@ -3,6 +3,7 @@ import { scheduleJob } from "node-schedule";
 import { cronRules, filePaths } from "./config";
 import cron from "cron-validate";
 import {
+  isProductionEnvironment,
   getJSONFormat,
   getCSVFormat,
   writeFileSync,
@@ -12,7 +13,6 @@ import {
 
 export const schedule = () => {
   for (const [ruleName, ruleExpression] of Object.entries(cronRules)) {
-    const isProductionEnvironment = process.env.NODE_ENV === "production";
     const cronExpression = cron(ruleExpression);
 
     if (isProductionEnvironment && ruleName === "dev") {

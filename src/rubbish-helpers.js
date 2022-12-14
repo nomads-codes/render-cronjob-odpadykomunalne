@@ -1,6 +1,8 @@
 import { promises, existsSync } from "fs";
 import { dateOptions, dateLocale } from "./config";
 
+export const isProductionEnvironment = process.env.NODE_ENV === "production";
+
 export const splitDateIntoParts = (date) => {
   return date.replace(/[^\d]/g, "-").split("-");
 };
