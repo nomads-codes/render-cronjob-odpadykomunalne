@@ -1,16 +1,27 @@
+import { getDate } from "./rubbish-helpers";
 import queryString from "query-string";
 import puppeteer from "puppeteer";
-import fs from "fs";
 
 export const rubbishScrapper = async (updated_at) => {
   let queryParsed = queryString.parse(process.argv.slice(2).join("&"));
   let query = queryString.stringify(queryParsed);
 
-  const browser = await puppeteer.launch({ headless: true });
   const base_url = "https://odpadykomunalne.tczew.pl/?p=1-harmonogram";
+  const browser = await puppeteer.launch({ headless: true });
+
+  const calculateDays = (value) => Number(value) + 1;
+  const defaults = {
+    street: {
+      name: "Romana Klima",
+      id: "b3f753",
+    },
+    search: {
+      days: calculateDays("14"),
+    },
+  };
 
   if (query.length <= 0) {
-    query = "&s=b3f753&d=14";
+    query = `&s=${defaults.street.id}&d=${defaults.search.days}`;
   }
 
   const urls = {
@@ -18,19 +29,18 @@ export const rubbishScrapper = async (updated_at) => {
     mixed: `${base_url}&t=1&${query}`,
   };
 
-  const getRubbishData = async (url, type) => {
+  const getRubbishData = async (url) => {
     const page = await browser.newPage();
     await page.goto(url);
 
     const allResultsSelector = "#content";
     await page.waitForSelector(allResultsSelector);
     await page.click(allResultsSelector);
-
     const resultsSelector = "table tr:not([style])";
     await page.waitForSelector(resultsSelector);
 
     // Extract the results from the page.
-    const rubbishData = await page.evaluate(async (resultsSelector) => {
+    return await page.evaluate(async (resultsSelector) => {
       const contentNodeHeadingData = (heading) => {
         heading = heading?.textContent?.trim();
 
@@ -49,7 +59,7 @@ export const rubbishScrapper = async (updated_at) => {
         const [date, day] = heading.split(" ");
 
         return {
-          date: date,
+          date,
           day,
         };
       };
@@ -83,21 +93,13 @@ export const rubbishScrapper = async (updated_at) => {
 
         content = content.split(" ").filter((element) => element.length > 0);
 
-        const [streetPrefix, streetName, ...rest] = content;
+        const [, streetName, ...rest] = content;
+        const rubbish = rest.length ? rest : ["ZMIESZANE"];
 
-        const street = [streetPrefix, streetName].join(" ") || "";
-        const rubbish = rest.length ? rest : null;
-
-        if (rubbish === null) {
-          return {
-            street,
-          };
-        } else {
-          return {
-            rubbish,
-            street,
-          };
-        }
+        return {
+          street: streetName,
+          rubbish,
+        };
       };
 
       return [...document.querySelectorAll(resultsSelector)].map(
@@ -109,36 +111,41 @@ export const rubbishScrapper = async (updated_at) => {
           let content = contentNodeData($content);
 
           return {
-            rubbish: content.rubbish,
-            street: content.street,
             date: heading.date,
             day: heading.day,
+            rubbish: content.rubbish,
           };
         }
       );
     }, resultsSelector);
-
-    return rubbishData.map((rubbish) => {
-      return {
-        type: type,
-        ...rubbish,
-      };
-    });
   };
 
-  const rubbish = {
-    selective: await getRubbishData(urls.selective, "selective"),
-    mixed: await getRubbishData(urls.mixed, "mixed"),
-  };
+  const [selective, mixed] = await Promise.all([
+    await getRubbishData(urls.selective),
+    await getRubbishData(urls.mixed),
+  ]);
 
-  const rubbishData = {
-    updated_at: updated_at,
-    urls,
-    rubbish: [...rubbish.selective, ...rubbish.mixed],
-  };
-  const json = JSON.stringify(rubbishData, null, 2);
+  const data = [...selective, ...mixed]
+    .map((data) => {
+      if (typeof data.date === "string") {
+        const date = getDate(data.date, "iso");
+        return {
+          ...data,
+          date,
+        };
+      }
 
-  fs.writeFileSync(`./data/rubbish-data.json`, json);
+      return data;
+    })
+    .sort((a, b) => new Date(a.date) - new Date(b.date));
 
   await browser.close();
+
+  return {
+    details: {
+      updated_at: getDate(updated_at, "iso"),
+      urls,
+    },
+    data,
+  };
 };
