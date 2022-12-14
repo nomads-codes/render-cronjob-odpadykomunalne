@@ -24,8 +24,8 @@ export const schedule = () => {
         const scheduleData = await rubbishScrapper(date);
         const scheduleLog = getJSONFormat({
           updated_at: getDate(date, "human"),
-          ruleExpression,
-          ruleName,
+          expresion: ruleExpression,
+          name: ruleName,
         });
 
         writeFileSync(`./data/schedule.json`, getJSONFormat(scheduleData, 2));
