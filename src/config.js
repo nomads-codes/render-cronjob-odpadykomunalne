@@ -8,6 +8,15 @@ export const cronRules = {
   dev: "*/1 * * * *", // 3
 };
 
+export const filePaths = {
+  schedule: {
+    error: `./data/error.log`,
+    json: `./data/schedule.json`,
+    log: `./data/schedule.log`,
+  },
+};
+
 export default {
+  filePaths,
   cronRules,
 };

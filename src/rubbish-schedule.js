@@ -1,6 +1,6 @@
 import { rubbishScrapper } from "./rubbish-scrapper";
 import { scheduleJob } from "node-schedule";
-import { cronRules } from "./config";
+import { cronRules, filePaths } from "./config";
 import cron from "cron-validate";
 import {
   getJSONFormat,
@@ -28,8 +28,8 @@ export const schedule = () => {
           name: ruleName,
         });
 
-        writeFileSync(`./data/schedule.json`, getJSONFormat(scheduleData, 2));
-        writeCSVFile(`./data/schedule.log`, getCSVFormat(scheduleLog));
+        writeFileSync(filePaths.schedule.json, getJSONFormat(scheduleData, 2));
+        writeCSVFile(filePaths.schedule.log, getCSVFormat(scheduleLog));
       });
     }
 
@@ -40,7 +40,7 @@ export const schedule = () => {
         date: getDate(new Date().toISOString(), "human"),
       });
 
-      writeCSVFile("./data/error.log", getCSVFormat(scheduleError));
+      writeCSVFile(filePaths.schedule.error, getCSVFormat(scheduleError));
     }
   }
 };
