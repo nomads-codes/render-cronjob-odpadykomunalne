@@ -1,33 +1,10 @@
+import { queryUrls } from "./rubbish-query";
 import { getDate } from "./rubbish-helpers";
-import queryString from "query-string";
 import puppeteer from "puppeteer";
 
 export const rubbishScrapper = async (updated_at) => {
-  let queryParsed = queryString.parse(process.argv.slice(2).join("&"));
-  let query = queryString.stringify(queryParsed);
-
-  const base_url = "https://odpadykomunalne.tczew.pl/?p=1-harmonogram";
   const browser = await puppeteer.launch({ headless: true });
-
-  const calculateDays = (value) => Number(value) + 1;
-  const defaults = {
-    street: {
-      name: "Romana Klima",
-      id: "b3f753",
-    },
-    search: {
-      days: calculateDays("14"),
-    },
-  };
-
-  if (query.length <= 0) {
-    query = `&s=${defaults.street.id}&d=${defaults.search.days}`;
-  }
-
-  const urls = {
-    selective: `${base_url}&t=2&${query}`,
-    mixed: `${base_url}&t=1&${query}`,
-  };
+  const { date } = getDate(updated_at);
 
   const getRubbishData = async (url) => {
     const page = await browser.newPage();
@@ -121,29 +98,23 @@ export const rubbishScrapper = async (updated_at) => {
   };
 
   const [selective, mixed] = await Promise.all([
-    await getRubbishData(urls.selective),
-    await getRubbishData(urls.mixed),
+    await getRubbishData(queryUrls.selective),
+    await getRubbishData(queryUrls.mixed),
   ]);
 
   const data = [...selective, ...mixed]
-    .map((data) => {
-      const { date } = getDate(data.date);
-
-      return {
-        ...data,
-        date: date.iso,
-      };
-    })
+    .map((data) => ({
+      ...data,
+      date: getDate(data.date).date.iso,
+    }))
     .sort((a, b) => new Date(a.date) - new Date(b.date));
 
   await browser.close();
 
-  const { date } = getDate(updated_at);
-
   return {
     details: {
       updated_at: date.iso,
-      urls,
+      urls: queryUrls,
     },
     data,
   };

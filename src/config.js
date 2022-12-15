@@ -26,7 +26,23 @@ export const dateOptions = {
   minute: "numeric",
 };
 
+export const queryBaseURL = "https://odpadykomunalne.tczew.pl/?p=1-harmonogram";
+
+export const defaultStreet = {
+  name: "Romana Klima",
+  id: "b3f753",
+};
+
+export const defaultDays = "15";
+
+export const defaultQuery = {
+  street: defaultStreet.id,
+  days: defaultDays,
+};
+
 export default {
+  queryBaseURL,
+  defaultQuery,
   dateOptions,
   dateLocale,
   filePaths,

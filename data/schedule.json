@@ -1,6 +1,6 @@
 {
   "details": {
-    "updated_at": "2022-12-14T15:43:00.000Z",
+    "updated_at": "2022-12-15T08:45:00.000Z",
     "urls": {
       "selective": "https://odpadykomunalne.tczew.pl/?p=1-harmonogram&t=2&&s=b3f753&d=15",
       "mixed": "https://odpadykomunalne.tczew.pl/?p=1-harmonogram&t=1&&s=b3f753&d=15"
@@ -55,20 +55,6 @@
     },
     {
       "date": "2022-12-29T00:00:00.000Z",
-      "day": "Czwartek",
-      "rubbish": [
-        "ZMIESZANE"
-      ]
-    },
-    {
-      "date": "2023-01-05T00:00:00.000Z",
-      "day": "Czwartek",
-      "rubbish": [
-        "ZMIESZANE"
-      ]
-    },
-    {
-      "date": "2023-01-12T00:00:00.000Z",
       "day": "Czwartek",
       "rubbish": [
         "ZMIESZANE"
