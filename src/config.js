@@ -1,5 +1,5 @@
 // 1. "At 20:00, only on Sunday"
-// 2. "At 09:00 and 21:00, Monday through Friday"
+// 2. "At 06:00 and 20:00, Monday through Friday"
 // 3. "Every minute"
 
 export const cronRules = {
